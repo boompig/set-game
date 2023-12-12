@@ -2,13 +2,14 @@
 <script lang="ts">
     import { generateDeck, dealDeck, NUM_DEALT_CARDS, NUM_DEALT_CARDS_EXTRA } from "$lib/deck";
     import { colorToString, type Card, patternToString, shapeToString } from "$lib/card";
-    import {type IGameEvent, GameEventType} from '$lib/game-events';
+    import {type IGameEvent, GameEventType, type IGameResult } from '$lib/game-events';
     import CardElem from "./CardElem.svelte";
     import IsSetModal from "./IsSetModal.svelte";
     import { isValidSet, hasSet, findSet } from "$lib/set-utils";
 
     // we get this from the parent
     export let gameRandomSeed: number;
+    export let onGameOver: (gameResult: IGameResult) => void;
 
     let isDealt = false;
     let deck: Card[] = [];
@@ -16,7 +17,38 @@
     let selectedCards: Card[] = [];
     let points = 0;
     let hint = '';
+    /**
+     * The time at which the player started the game
+     * Timestamp with ms
+     */
+    let startTime = 0;
+    /**
+     * Used to update elapsed time
+     */
+    let timerId: number | null = null;
+    /**
+     * Amount of time elapsed for the current game (s)
+     */
+    let elapsedTime: number = 0;
+    /**
+     * Final time for the game
+     */
+    let gameEndTime: number;
 
+    function updateElapsedTime(startTime: number) {
+        // sanity runtime checking
+        if(!startTime || isNaN(startTime) || typeof startTime !== 'number') {
+            throw new Error('start time undefined');
+        }
+        const now = (new Date()).valueOf();
+        const diff = now - startTime;
+        elapsedTime = Math.round(diff / 1000.0);
+    }
+
+    /**
+     * The initial deal for this game
+     * Also handles game restart
+     */
     function handleDealDeck() {
         deck = generateDeck();
         tableCards = dealDeck(deck, NUM_DEALT_CARDS, gameRandomSeed);
@@ -26,6 +58,16 @@
         selectedCards = [];
         points = 0;
         hint = '';
+        startTime = (new Date()).valueOf();
+        elapsedTime = 0;
+
+        if (timerId) {
+            window.clearInterval(timerId);
+            timerId = null;
+        }
+        window.setInterval(() => {
+            updateElapsedTime(startTime);
+        }, 1000)
     }
 
     /**
@@ -117,6 +159,33 @@
     })();
 
     $: tableHasSet = hasSet(tableCards);
+ 
+    /**
+     * Check if this is the end of the game
+     */
+    function checkIsGameOver(isDealt: boolean, deck: Card[], tableHasSet: boolean) {
+        return isDealt && deck.length === 0 && !tableHasSet;
+    }
+
+    function handleGameOver(isGameOver: boolean) {
+        if (isGameOver) {
+            // process end of game stuff
+            if (timerId) {
+                window.clearInterval(timerId);
+            }
+            const gameResult = {
+                score: points,
+                elapsedTime: elapsedTime,
+            };
+            onGameOver(gameResult);
+        }
+    }
+
+    $: isGameOver = checkIsGameOver(isDealt, deck, tableHasSet);
+    /**
+     * Execute this function dynamically when the isGameOver variable changes
+     */
+    $: handleGameOver(isGameOver);
 </script>
 
 <style>
@@ -157,6 +226,7 @@
 
         {#if isDealt}
             <div>Points: {points}</div>
+            <div>Elapsed Time: {elapsedTime}</div>
             <div>Deck size: {deck.length}</div>
             <div>Still a set? { tableHasSet }</div>
             {#if hint}

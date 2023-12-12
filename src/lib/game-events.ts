@@ -8,3 +8,8 @@ export interface IGameEvent {
     type: GameEventType;
     card?: Card;
 }
+
+export interface IGameResult {
+    score: number;
+    elapsedTime: number;
+}

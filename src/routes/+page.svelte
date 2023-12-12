@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+    import type { IGameResult } from '$lib/game-events';
     import Game from '../components/Game.svelte';
 
     /**
@@ -14,8 +15,9 @@
      */
     let gameRandomSeed = 0;
     let startGameErrorMsg = '';
+    let highScore: IGameResult | null = null;
 
-    function startGame(e) {
+    function startGame(e: any) {
         if (!randomSeed) {
             startGameErrorMsg = 'Random seed is required';
             return;
@@ -28,10 +30,19 @@
         e.preventDefault();
     }
 
-    function changeRandomSeed(e) {
+    function changeRandomSeed(e: any) {
         randomSeed = Number.parseInt(e.target.value);
     }
 
+    function handleGameOver(gameResult: IGameResult) {
+        if ((!highScore) || gameResult.elapsedTime < highScore.elapsedTime) {
+            // we have a new high score
+            highScore = {
+                score: gameResult.score,
+                elapsedTime: gameResult.elapsedTime,
+            };
+        }
+    }
 </script>
 
 <style>
@@ -41,6 +52,12 @@
 </style>
 
 <h1>Set Game</h1>
+
+{#if highScore}
+    <section>
+        <div>HS time: {highScore.elapsedTime}</div>
+    </section>
+{/if}
 
 <form>
     {#if startGameErrorMsg}
@@ -53,5 +70,5 @@
 
 <!-- show this when the game is dealt -->
 {#if isGameStarted && gameRandomSeed !== 0 }
-    <svelte:component this={Game} gameRandomSeed={gameRandomSeed} />
+    <svelte:component this={Game} gameRandomSeed={gameRandomSeed} onGameOver={handleGameOver}/>
 {/if}
