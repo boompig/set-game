@@ -5,7 +5,7 @@
     import {type IGameEvent, GameEventType} from '$lib/game-events';
     import CardElem from "./CardElem.svelte";
     import IsSetModal from "./IsSetModal.svelte";
-    import { isValidSet, has_set, findSet } from "$lib/set-utils";
+    import { isValidSet, hasSet, findSet } from "$lib/set-utils";
 
     // we get this from the parent
     export let gameRandomSeed: number;
@@ -116,7 +116,7 @@
         return selectedCards.length === 3;
     })();
 
-    $: tableHasSet = has_set(tableCards);
+    $: tableHasSet = hasSet(tableCards);
 </script>
 
 <style>

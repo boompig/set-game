@@ -4,12 +4,9 @@ import { Card, MAX_NUM } from "$lib/card";
  * Runs in O(n) time and constant space
  */
 function isAllSameProp(cards: Card[], prop: keyof Card): boolean {
-    console.log(`[prop - ${prop}] Checking all same...`);
-    // check all same
     let expectedProp = (cards[0] as any)[prop];
     for(let i = 0; i < cards.length; i++) {
         if ((cards[i] as any)[prop] !== expectedProp) {
-            console.log(`[prop - ${prop}] expected ${expectedProp}, got ${cards[i][prop]}`);
             return false;
         }
     }
@@ -46,27 +43,22 @@ function checkNumberPropSet(cards: Card[], prop: keyof Card): boolean {
 
 export function isValidSet(cards: Card[]): boolean {
     if (cards.length !== 3) {
-        // console.log('length check failed');
         return false;
     }
 
     if (!checkNumberPropSet(cards, 'number')) {
-        // console.log('number check failed');
         return false;
     }
 
     if (!checkNumberPropSet(cards, 'shape')) {
-        // console.log('shape check failed');
         return false;
     }
 
     if (!checkNumberPropSet(cards, 'color')) {
-        // console.log('color check failed');
         return false;
     }
 
     if (!checkNumberPropSet(cards, 'pattern')) {
-        // console.log('pattern check failed');
         return false;
     }
 
@@ -83,7 +75,6 @@ function constructUniqueProp(cards: Card[], prop: keyof Card): number {
     }
 }
 
-
 function constructLastSetCard(cards: Card[]) {
     console.assert(cards.length === 2);
     // given 2 cards in a set, the final card is unique
@@ -98,10 +89,7 @@ function constructLastSetCard(cards: Card[]) {
 
 function findLastSetCard(partialSet: Card[], availableCards: Card[]): Card | null {
     const targetCard = constructLastSetCard(partialSet);
-    // console.log(`partial set is:\n` + cardsToString(partialSet));
-    // console.log(`target card is ${targetCard.toString()}`)
     for (let i = 0; i < availableCards.length; i++) {
-        // numVisited++;
 
         let card = availableCards[i];
         if (targetCard.isSame(card)) {
@@ -117,22 +105,18 @@ function findLastSetCard(partialSet: Card[], availableCards: Card[]): Card | nul
 function has_set_search(setCards: Card[], availableCards: Card[], maxDepth: number, depth: number, visited: Set<number>): Card[] | null {
     if (setCards.length === maxDepth) {
         throw new Error('should never be here');
-        // console.log('Reached max depth. Checking if it is a set');
         if (isValidSet(setCards)) {
             return setCards;
         } else {
             return null;
         }
     } else if (setCards.length === maxDepth - 1) {
-        // console.log('Searching for the last card...');
         let lastCard = findLastSetCard(setCards, availableCards);
         if (lastCard) {
             const set = [...setCards];
             set.push(lastCard);
-            // console.log('Found the last card.');
             return set;
         } else {
-            // console.log('Last card not found.')
             return null;
         }
     }
@@ -141,23 +125,19 @@ function has_set_search(setCards: Card[], availableCards: Card[], maxDepth: numb
     for(let i = 0; i < availableCards.length; i++) {
         let newCard = availableCards[i];
         if (visited.has(newCard.hash())) {
-            // console.log(`[${depth}] -> skipping over bad card with value ${newCard.hash()}`);
             continue;
         }
 
-        // numVisited++;
+        // numVisited+;
 
         let newSetCards = [...setCards];
-        // console.log(`[${depth}] Trying card ${newCard.toString()} (${i})`);
         newSetCards.push(newCard);
         let newAvailCards = [...availableCards];
         newAvailCards.splice(i, 1);
         let foundSet = has_set_search(newSetCards, newAvailCards, maxDepth, depth + 1, visited);
         if (foundSet) {
-            // console.log(`Found valid set: ${foundSet}`);
             return foundSet;
         } else {
-            // console.log(`[${depth}] not a set, trying again`);
             if (depth === 0) {
                 visited.add(newCard.hash());
             }
@@ -175,7 +155,7 @@ export function findSet(cards: Card[]): Card[] | null {
     return s;
 }
 
-export function has_set(cards: Card[]): boolean {
+export function hasSet(cards: Card[]): boolean {
     // large enough grouping such that a set is possible
     if (cards.length < 3) {
         return false;
