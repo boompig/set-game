@@ -38,7 +38,7 @@ Things I learned during this programming exercise:
 ## Svelte + Vite + Vitest
 
 - how HTML event handlers work in Svelte (more or less the same) except onChange -> on:change
-    - also has a class:<class-name> bind syntax similar to Angular
+    - also has a `class:<class-name>` bind syntax similar to Angular
 - if statement (conditional rendering) / for loop templating similar to Jinja2
 - standard handlebar syntax
 - how event dispatching works in Svelte
@@ -60,7 +60,12 @@ Things I learned during this programming exercise:
 - Build sizes are fairly small (everything together for this project is ~100kB)
     - essentially this is due to how Svelte has its own compiler, while React is a library operating over the vDOM at runtime. The React library/runtime is ~200kB by itself.
 - By default it has a11y warnings which are very noisy. Disabling a11y warnings is cumbersome.
-- There is no good equivalent
+- There is no good equivalent of `useEffect`
+- There is the same trick for mutable objects as there is in React. In React, you create immutable object copies. In Svelte, you trigger a re-render based on re-assignment. In both cases, you have to be careful what you're modifying.
+- Because reactivity kind of works by magic, it's a little hard to reason about
+    - [This page](https://dev.to/isaachagoel/svelte-reactivity-gotchas-solutions-if-you-re-using-svelte-in-production-you-should-read-this-3oj3) documents some gotchas. I ran into the first example on the page and it took me forever to debug it.
+        - In React, you could state what the dependencies are explicitly. It looks like you can do the same in Svelte via the argument list.
+- There is no good way to create multiple components in a single file, unlike with React. I suppose that this helps with readability but it's pretty annoying.
 
 ## TypeScript
 
