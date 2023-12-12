@@ -26,6 +26,8 @@ However, there are quite a few tricks and performance optimizations. They boil d
     - In a generalized set, you can play the same trick with excluded card combinations/paths rather than just a single excluded card/node.
     - We can use a standard `visited` set for this purpose.
 
+I am sure you can make `hasSet` much more efficient through directed search. For example if there is only one green card then can start with it. Or it could keep track of cards that have already exited the game and tally probabilities.
+
 ---
 
 Things I learned during this programming exercise:

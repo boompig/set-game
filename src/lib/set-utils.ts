@@ -1,12 +1,12 @@
-import { Card, MAX_NUM } from "$lib/card";
+import { Card, MAX_NUM } from '$lib/card';
 
 /**
  * Runs in O(n) time and constant space
  */
 function isAllSameProp(cards: Card[], prop: keyof Card): boolean {
-    let expectedProp = (cards[0] as any)[prop];
+    const expectedProp = cards[0][prop];
     for(let i = 0; i < cards.length; i++) {
-        if ((cards[i] as any)[prop] !== expectedProp) {
+        if (cards[i][prop] !== expectedProp) {
             return false;
         }
     }
@@ -19,13 +19,12 @@ function isAllSameProp(cards: Card[], prop: keyof Card): boolean {
  * Uses bitwise addition / operations
  */
 function isAllDifferentNumberProp2(cards: Card[], prop: keyof Card): boolean {
-    const n = cards.length;
     // guaranteed to be integer
     // taking off an additional 1 because the numbers are 1-based (so we will never get 2^0 === 1 in the sum)
     const expectedSum = 2 ** (MAX_NUM + 1) - 1 - 1;
     let s = 0;
     for(let i = 0; i < cards.length; i++) {
-        s = s | (2 ** (cards[i] as any)[prop]);
+        s = s | (2 ** (cards[i][prop] as number));
     }
     return s === expectedSum;
 }
@@ -34,7 +33,7 @@ function checkNumberPropSet(cards: Card[], prop: keyof Card): boolean {
     // cards guaranteed to be length >= 2
     console.assert(cards.length >= 2);
 
-    if ((cards[0]as any)[prop] === (cards[1] as any)[prop]) {
+    if (cards[0][prop] === cards[1][prop]) {
         return isAllSameProp(cards, prop);
     } else {
         return isAllDifferentNumberProp2(cards, prop);
@@ -70,7 +69,7 @@ function constructUniqueProp(cards: Card[], prop: keyof Card): number {
         return cards[0][prop] as number;
     } else {
         // 1 + 2 + 3
-        const s = 6 - (cards[0] as any)[prop] - (cards[1] as any)[prop];
+        const s = 6 - (cards[0][prop] as number) - (cards[1][prop] as number);
         return s;
     }
 }
@@ -90,8 +89,7 @@ function constructLastSetCard(cards: Card[]) {
 function findLastSetCard(partialSet: Card[], availableCards: Card[]): Card | null {
     const targetCard = constructLastSetCard(partialSet);
     for (let i = 0; i < availableCards.length; i++) {
-
-        let card = availableCards[i];
+        const card = availableCards[i];
         if (targetCard.isSame(card)) {
             return card;
         }
@@ -111,7 +109,7 @@ function has_set_search(setCards: Card[], availableCards: Card[], maxDepth: numb
             return null;
         }
     } else if (setCards.length === maxDepth - 1) {
-        let lastCard = findLastSetCard(setCards, availableCards);
+        const lastCard = findLastSetCard(setCards, availableCards);
         if (lastCard) {
             const set = [...setCards];
             set.push(lastCard);
@@ -123,18 +121,18 @@ function has_set_search(setCards: Card[], availableCards: Card[], maxDepth: numb
 
     // otherwise...
     for(let i = 0; i < availableCards.length; i++) {
-        let newCard = availableCards[i];
+        const newCard = availableCards[i];
         if (visited.has(newCard.hash())) {
             continue;
         }
 
         // numVisited+;
 
-        let newSetCards = [...setCards];
+        const newSetCards = [...setCards];
         newSetCards.push(newCard);
-        let newAvailCards = [...availableCards];
+        const newAvailCards = [...availableCards];
         newAvailCards.splice(i, 1);
-        let foundSet = has_set_search(newSetCards, newAvailCards, maxDepth, depth + 1, visited);
+        const foundSet = has_set_search(newSetCards, newAvailCards, maxDepth, depth + 1, visited);
         if (foundSet) {
             return foundSet;
         } else {
@@ -150,8 +148,8 @@ export function findSet(cards: Card[]): Card[] | null {
     if (cards.length < 3) {
         return null;
     }
-    let visited = new Set<number>();
-    let s = has_set_search([], cards, 3, 0, visited);
+    const visited = new Set<number>();
+    const s = has_set_search([], cards, 3, 0, visited);
     return s;
 }
 
@@ -161,7 +159,7 @@ export function hasSet(cards: Card[]): boolean {
         return false;
     }
 
-    let visited = new Set<number>();
-    let s = has_set_search([], cards, 3, 0, visited);
+    const visited = new Set<number>();
+    const s = has_set_search([], cards, 3, 0, visited);
     return s !== null;
 }

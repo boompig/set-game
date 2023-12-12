@@ -15,7 +15,7 @@ test('deal all cards from deck', () => {
     const initDeckLength = deck.length;
 
     while(deck.length > 0) {
-        const chunk = dealDeck(deck, chunkSize, randomSeed)
+        const chunk = dealDeck(deck, chunkSize, randomSeed);
         dealtCards.push(...chunk);
     }
 

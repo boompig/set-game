@@ -10,13 +10,14 @@ export const NUM_DEALT_CARDS = 12;
  */
 export const NUM_DEALT_CARDS_EXTRA = 15;
 
+// taken from https://stackoverflow.com/a/47593316/755934
 function mulberry32(randomSeed: number) {
-    return function() {
-      var t = randomSeed += 0x6D2B79F5;
-      t = Math.imul(t ^ t >>> 15, t | 1);
-      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-      return ((t ^ t >>> 14) >>> 0) / 4294967296;
-    }
+    return function () {
+        let t = randomSeed += 0x6D2B79F5;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
 }
 
 /**
@@ -34,8 +35,8 @@ export function dealDeck(deck: Card[], cardsToDeal: number, randomSeed: number):
         if (deck.length === 0) {
             break;
         }
-        let randomIndex = Math.floor(randomGenerator() * deck.length);
-        let removedCards = deck.splice(randomIndex, 1);
+        const randomIndex = Math.floor(randomGenerator() * deck.length);
+        const removedCards = deck.splice(randomIndex, 1);
         cards.push(removedCards[0]);
     }
     return cards;

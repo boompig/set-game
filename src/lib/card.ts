@@ -4,7 +4,7 @@ export enum Color {
     RED = 1,
     BLUE = 2,
     GREEN = 3,
-};
+}
 
 // reverse mapping
 export function colorToString(c: Color): string {
@@ -22,7 +22,7 @@ export enum Pattern {
     FILLED = 1,
     STRIPED = 2,
     OUTLINED = 3,
-};
+}
 
 export function patternToString(p: Pattern): string {
     switch (p) {
@@ -39,7 +39,7 @@ export enum Shape {
     DIAMOND = 1,
     SQUIGGLE = 2,
     CIRCLE = 3,
-};
+}
 
 export function shapeToString(s: Shape): string {
     switch(s) {

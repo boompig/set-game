@@ -11,11 +11,27 @@
     export let gameRandomSeed: number;
     export let onGameOver: (gameResult: IGameResult) => void;
 
+    /**
+     * Has an initial deal been performed?
+     */
     let isDealt = false;
     let deck: Card[] = [];
+    /**
+     * Cards visible to the player
+     */
     let tableCards: Card[] = [];
+    /**
+     * Cards selected by the user (used for set matching)
+     */
     let selectedCards: Card[] = [];
+    /**
+     * Number of sets found by the current user
+     */
     let points = 0;
+    /**
+     * A hint displayed to the user.
+     * Empty string when the hint is hidden.
+     */
     let hint = '';
     /**
      * The time at which the player started the game
@@ -30,10 +46,6 @@
      * Amount of time elapsed for the current game (s)
      */
     let elapsedTime: number = 0;
-    /**
-     * Final time for the game
-     */
-    let gameEndTime: number;
 
     function updateElapsedTime(startTime: number) {
         // sanity runtime checking
