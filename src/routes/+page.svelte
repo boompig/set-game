@@ -4,3 +4,6 @@
 </script>
 
 <svelte:component this={App} />
+<svelte:head>
+    <title>Set Game</title>
+</svelte:head>

@@ -56,6 +56,7 @@ Things I learned during this programming exercise:
 - how to use typescript with Svelte (lang="ts")
 - how to use vitest (basically the same as jest, really easy to set up)
     - watch mode is on by default
+- how to set custom title and other custom head elements
 
 ### Key things I learned about Svelte
 
