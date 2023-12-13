@@ -127,13 +127,16 @@
     function countPointsIfSet() {
         if (selectedCards.length === 3) {
             if (isValidSet(selectedCards)) {
+                console.assert(selectedCards.length === 3);
+                console.assert(tableCards.length % 3 === 0);
                 points++;
-                const newArr = [...tableCards]
+                const newArr = [...tableCards];
                 // remove the selected cards from the table
                 selectedCards.forEach(card => {
-                    const i = tableCards.findIndex((c) => c === card);
+                    const i = newArr.findIndex((c) => c === card);
                     newArr.splice(i, 1);
                 });
+                console.assert(newArr.length === tableCards.length - 3);
                 tableCards = newArr;
                 // finally, de-select
                 selectedCards = [];
