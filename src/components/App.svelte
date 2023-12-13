@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { IGameResult } from '$lib/game-events';
+    import { onMount } from 'svelte';
     import Game from '../components/Game.svelte';
 
     /**
@@ -41,8 +42,22 @@
                 score: gameResult.score,
                 elapsedTime: gameResult.elapsedTime,
             };
+
+            // write to localStorage
+            window.localStorage.setItem('set:score', JSON.stringify(highScore));
         }
     }
+
+    /**
+     * Svelte lifecycle method
+     */
+    onMount(() => {
+        const v = window.localStorage.getItem('set:score');
+        if (v) {
+            const savedScore = JSON.parse(v) as IGameResult;
+            highScore = savedScore;
+        }
+    });
 </script>
 
 <style>
